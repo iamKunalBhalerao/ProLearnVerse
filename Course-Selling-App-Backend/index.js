@@ -1,14 +1,19 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const { UserRouter } = require("./pages/user");
+const { AdminRouter } = require("./pages/admin");
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
+app.use("/api/v1/user", UserRouter);
+app.use("/api/v1/admin", AdminRouter);
+
 function main() {
   mongoose.connect(process.env.MONGO_URL);
-  app.listen(5000, () => {
+  app.listen(process.env.SERVER_PORT || 8000, () => {
     console.log("server is on PORT:5000");
   });
 }
