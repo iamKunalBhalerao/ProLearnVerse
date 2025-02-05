@@ -2,12 +2,12 @@ const { Router } = require("express");
 const z = require("zod");
 const bcrypt = require("bcrypt");
 
-const UserRouter = Router();
+const CourseRouter = Router();
 
-UserRouter.get("/", (req, res) => {
+CourseRouter.get("/", (req, res) => {
   res.send("Course");
 });
 
 module.exports = {
-  UserRouter,
+  CourseRouter,
 };
