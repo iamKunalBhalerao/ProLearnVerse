@@ -1,7 +1,10 @@
 const { Router } = require("express");
 const z = require("zod");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const { UserModel } = require("../db");
+const { UserAuth } = require("../auth/UserAuth");
+const { JWT_USER_PASSWORD } = require("../config");
 
 const UserRouter = Router();
 
@@ -53,16 +56,40 @@ UserRouter.post("/signup", async (req, res) => {
       createUser,
     });
   } catch (e) {
-    es.status(403).json({
+    res.status(403).json({
       message: "User Alredy Exists !!!",
     });
   }
 });
-UserRouter.post("/signin", (req, res) => {});
+UserRouter.post("/signin", async (req, res) => {
+  const { email, password } = req.body;
 
-UserRouter.post("/", (req, res) => {});
+  const user = await UserModel.findOne({
+    email: email,
+  });
 
-UserRouter.post("/purchased", (req, res) => {});
+  if (!user) {
+    res.status(403).json({
+      message: "User Not Found",
+    });
+  }
+
+  const comparePassword = await bcrypt.compare(password, user.password);
+  if (comparePassword) {
+    const token = jwt.sign({ id: user._id }, JWT_USER_PASSWORD);
+    res.status(200).json({
+      token,
+    });
+  } else {
+    res.status(403).json({
+      message: "Invalid Credentials",
+    });
+  }
+});
+
+UserRouter.post("/", UserAuth, (req, res) => {});
+
+UserRouter.post("/purchased", UserAuth, (req, res) => {});
 
 module.exports = {
   UserRouter,
