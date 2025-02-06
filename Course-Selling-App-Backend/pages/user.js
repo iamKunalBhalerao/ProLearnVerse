@@ -59,6 +59,9 @@ UserRouter.post("/signup", async (req, res) => {
   }
 });
 UserRouter.post("/signin", (req, res) => {});
+
+UserRouter.post("/", (req, res) => {});
+
 UserRouter.post("/purchased", (req, res) => {});
 
 module.exports = {
