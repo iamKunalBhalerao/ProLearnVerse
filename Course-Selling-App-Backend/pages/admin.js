@@ -3,12 +3,12 @@ const z = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { AdminAuth } = require("../auth/AdminAuth");
-const { AdminModel } = require("../db");
+const { AdminModel, CourseModel } = require("../db");
 const { JWT_ADMIN_PASSWORD } = require("../config");
 
 const AdminRouter = Router();
 
-AdminRouter.get("/signup", async (req, res) => {
+AdminRouter.post("/signup", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
   const requireBody = z.object({
@@ -57,14 +57,14 @@ AdminRouter.get("/signup", async (req, res) => {
     });
   }
 });
-AdminRouter.get("/signin", async (req, res) => {
+AdminRouter.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
   const admin = await AdminModel.findOne({
     email: email,
   });
 
-  if (!findEmail) {
+  if (!admin) {
     res.status(403).json({
       message: "User Not Found",
     });
@@ -84,9 +84,33 @@ AdminRouter.get("/signin", async (req, res) => {
     });
   }
 });
-AdminRouter.get("/create-course", AdminAuth, (req, res) => {});
-AdminRouter.get("/update-course", AdminAuth, (req, res) => {});
-AdminRouter.get("/delete-course", AdminAuth, (req, res) => {});
+AdminRouter.post("/create-course", AdminAuth, async (req, res) => {
+  const { title, description, price, imageUrl, creatorId } = req.body;
+
+  const userId = req.userId;
+
+  try {
+    const course = await CourseModel.create({
+      title: title,
+      description: description,
+      price: price,
+      imageUrl: imageUrl,
+      creatorId: userId,
+    });
+
+    res.status(200).json({
+      message: "Course Created Successfully",
+      course,
+    });
+  } catch (e) {
+    res.status(403).json({
+      message: "Something Went Wrong !!!",
+      error: e.error,
+    });
+  }
+});
+AdminRouter.get("/update-course", AdminAuth, async (req, res) => {});
+AdminRouter.get("/delete-course", AdminAuth, async (req, res) => {});
 AdminRouter.get("/", AdminAuth, (req, res) => {});
 
 module.exports = {
