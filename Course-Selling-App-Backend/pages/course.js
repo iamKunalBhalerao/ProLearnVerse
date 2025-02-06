@@ -4,9 +4,8 @@ const bcrypt = require("bcrypt");
 
 const CourseRouter = Router();
 
-CourseRouter.get("/", (req, res) => {
-  res.send("Course");
-});
+CourseRouter.get("/purchase", (req, res) => {});
+CourseRouter.get("/preview", (req, res) => {});
 
 module.exports = {
   CourseRouter,

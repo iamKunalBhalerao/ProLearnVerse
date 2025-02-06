@@ -5,7 +5,7 @@ const { UserModel } = require("../db");
 
 const UserRouter = Router();
 
-UserRouter.post("/", async (req, res) => {
+UserRouter.post("/signup", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
   const requireBody = z.object({
@@ -58,6 +58,8 @@ UserRouter.post("/", async (req, res) => {
     });
   }
 });
+UserRouter.post("/signin", (req, res) => {});
+UserRouter.post("/purchased", (req, res) => {});
 
 module.exports = {
   UserRouter,

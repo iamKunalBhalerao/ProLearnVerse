@@ -4,9 +4,12 @@ const bcrypt = require("bcrypt");
 
 const AdminRouter = Router();
 
-AdminRouter.get("/", (req, res) => {
-  res.send("Admin");
-});
+AdminRouter.get("/signup", (req, res) => {});
+AdminRouter.get("/signin", (req, res) => {});
+AdminRouter.get("/create-course", (req, res) => {});
+AdminRouter.get("/update-course", (req, res) => {});
+AdminRouter.get("/delete-course", (req, res) => {});
+AdminRouter.get("/", (req, res) => {});
 
 module.exports = {
   AdminRouter,
