@@ -85,9 +85,8 @@ AdminRouter.post("/signin", async (req, res) => {
   }
 });
 AdminRouter.post("/create-course", AdminAuth, async (req, res) => {
+  const adminId = req.adminId;
   const { title, description, price, imageUrl, creatorId } = req.body;
-
-  const userId = req.userId;
 
   try {
     const course = await CourseModel.create({
@@ -95,12 +94,12 @@ AdminRouter.post("/create-course", AdminAuth, async (req, res) => {
       description: description,
       price: price,
       imageUrl: imageUrl,
-      creatorId: userId,
+      creatorId: adminId,
     });
 
     res.status(200).json({
       message: "Course Created Successfully",
-      course,
+      courseId: course._id,
     });
   } catch (e) {
     res.status(403).json({
@@ -109,8 +108,53 @@ AdminRouter.post("/create-course", AdminAuth, async (req, res) => {
     });
   }
 });
-AdminRouter.get("/update-course", AdminAuth, async (req, res) => {});
-AdminRouter.get("/delete-course", AdminAuth, async (req, res) => {});
+AdminRouter.put("/update-course", AdminAuth, async (req, res) => {
+  const adminId = req.adminId;
+  const { title, description, price, imageUrl, courseId } = req.body;
+
+  try {
+    const course = await CourseModel.updateOne(
+      { _id: courseId, creatorId: adminId },
+      {
+        title,
+        description,
+        price,
+        imageUrl,
+      }
+    );
+    res.status(200).json({
+      message: "Course Updated",
+      courseId: course._id,
+      courseData: course,
+    });
+  } catch (e) {
+    res.status(403).json({
+      message: "Something went wrong",
+      error: e.error,
+    });
+  }
+});
+AdminRouter.delete("/delete-course", AdminAuth, async (req, res) => {
+  const adminId = req.adminId;
+  const { courseId } = req.body;
+
+  try {
+    const course = await CourseModel.deleteOne({
+      _id: courseId,
+      creatorId: adminId,
+    });
+    res.status(200).json({
+      message: "Course Deleted",
+      courseId: course._id,
+      courseData: course,
+    });
+  } catch (e) {
+    res.status(403).json({
+      message: "Something went wrong",
+      error: e.error,
+    });
+  }
+});
 AdminRouter.get("/", AdminAuth, (req, res) => {});
 
 module.exports = {
