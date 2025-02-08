@@ -4,7 +4,9 @@ const { JWT_USER_PASSWORD } = require("../config");
 
 function UserAuth(req, res, next) {
   const token = req.headers.token;
-  const decodedData = jwt.verify(token, JWT_USER_PASSWORD);
+  const word = token.split(" ");
+  const jwtToken = word[1];
+  const decodedData = jwt.verify(jwtToken, JWT_USER_PASSWORD);
 
   if (decodedData) {
     req.userId = decodedData.id;
