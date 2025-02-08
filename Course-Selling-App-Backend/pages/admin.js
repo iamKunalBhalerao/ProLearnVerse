@@ -3,7 +3,7 @@ const z = require("zod");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { AdminAuth } = require("../auth/AdminAuth");
-const { AdminModel, CourseModel } = require("../db");
+const { AdminModel, CourseModel } = require("../db/db");
 const { JWT_ADMIN_PASSWORD } = require("../config");
 
 const AdminRouter = Router();
