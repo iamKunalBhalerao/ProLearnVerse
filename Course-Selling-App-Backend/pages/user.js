@@ -110,8 +110,10 @@ UserRouter.get("/purchases", UserAuth, async (req, res) => {
     });
 
     res.status(200).json({
-      purchases,
-      courseData,
+      PurchaseData: {
+        purchases,
+        courseData,
+      },
     });
   } catch (e) {
     res.status(403).json({

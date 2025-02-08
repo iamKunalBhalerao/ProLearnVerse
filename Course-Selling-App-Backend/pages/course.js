@@ -4,6 +4,7 @@ const { CourseModel, PurchaseModel } = require("../db/db");
 
 const CourseRouter = Router();
 
+// Course Purchase
 CourseRouter.post("/purchase", UserAuth, async (req, res) => {
   const userId = req.userId;
   const courseId = req.body.courseId;
@@ -24,6 +25,8 @@ CourseRouter.post("/purchase", UserAuth, async (req, res) => {
     });
   }
 });
+
+// See All Courses
 CourseRouter.get("/preview", async (req, res) => {
   const allCourses = await CourseModel.find({});
   if (allCourses) {
