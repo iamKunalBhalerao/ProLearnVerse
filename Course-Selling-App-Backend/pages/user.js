@@ -2,12 +2,16 @@ const { Router } = require("express");
 const z = require("zod");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { UserModel } = require("../db/db");
+const { UserModel, PurchaseModel, CourseModel } = require("../db/db");
 const { UserAuth } = require("../auth/UserAuth");
 const { JWT_USER_PASSWORD } = require("../config");
 
 const UserRouter = Router();
 
+// Main page
+UserRouter.post("/", UserAuth, (req, res) => {});
+
+// Sign Up Page
 UserRouter.post("/signup", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -43,8 +47,7 @@ UserRouter.post("/signup", async (req, res) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 5);
-
-  try {
+  if (hashedPassword) {
     const createUser = await UserModel.create({
       email: email,
       password: hashedPassword,
@@ -55,12 +58,14 @@ UserRouter.post("/signup", async (req, res) => {
       message: "You are Signed Up 👏",
       createUser,
     });
-  } catch (e) {
+  } else {
     res.status(403).json({
       message: "User Alredy Exists !!!",
     });
   }
 });
+
+// Sign In Page
 UserRouter.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
@@ -87,9 +92,30 @@ UserRouter.post("/signin", async (req, res) => {
   }
 });
 
-UserRouter.post("/", UserAuth, (req, res) => {});
+//Purchase Course Course
+UserRouter.get("/purchases", UserAuth, async (req, res) => {
+  const userId = req.userId;
 
-UserRouter.post("/purchased", UserAuth, (req, res) => {});
+  try {
+    const purchases = await PurchaseModel.find({
+      userId: userId,
+    });
+
+    const courseData = await CourseModel.find({
+      _id: { $in: purchases.map((x) => x.courseId) },
+    });
+
+    res.status(200).json({
+      purchases,
+      courseData,
+    });
+  } catch (e) {
+    res.status(403).json({
+      message: "Something went wrong",
+      error: e,
+    });
+  }
+});
 
 module.exports = {
   UserRouter,

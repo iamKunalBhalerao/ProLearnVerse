@@ -41,7 +41,7 @@ const UserModel = model("users", UserSchema);
 const AdminModel = model("admins", AdminSchema);
 const CourseModel = model("courses", CourseSchema);
 const PurchaseModel = model("purchases", PurchaseSchema);
-const CourseContentModel = model("courseContent", CourseContentSchema);
+const CourseContentModel = model("coursecontent", CourseContentSchema);
 
 module.exports = {
   UserModel,
