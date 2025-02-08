@@ -8,9 +8,6 @@ const { JWT_USER_PASSWORD } = require("../config");
 
 const UserRouter = Router();
 
-// Main page
-UserRouter.post("/", UserAuth, (req, res) => {});
-
 // Sign Up Page
 UserRouter.post("/signup", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
@@ -90,6 +87,13 @@ UserRouter.post("/signin", async (req, res) => {
       message: "Invalid Credentials",
     });
   }
+});
+
+// Main page
+UserRouter.get("/", UserAuth, (req, res) => {
+  res.status(200).json({
+    message: "This is HOME page",
+  });
 });
 
 //Purchase Course Course

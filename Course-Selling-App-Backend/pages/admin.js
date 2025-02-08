@@ -8,6 +8,7 @@ const { JWT_ADMIN_PASSWORD } = require("../config");
 
 const AdminRouter = Router();
 
+// Admin Sign Up
 AdminRouter.post("/signup", async (req, res) => {
   const { email, password, firstName, lastName } = req.body;
 
@@ -57,6 +58,8 @@ AdminRouter.post("/signup", async (req, res) => {
     });
   }
 });
+
+// Admin Sign In
 AdminRouter.post("/signin", async (req, res) => {
   const { email, password } = req.body;
 
@@ -84,6 +87,15 @@ AdminRouter.post("/signin", async (req, res) => {
     });
   }
 });
+
+// Admin Home Page
+AdminRouter.get("/", AdminAuth, (req, res) => {
+  res.status(200).json({
+    message: "This is HOME page",
+  });
+});
+
+// Admin Create Course
 AdminRouter.post("/create-course", AdminAuth, async (req, res) => {
   const adminId = req.adminId;
   const { title, description, price, imageUrl, creatorId } = req.body;
@@ -108,6 +120,8 @@ AdminRouter.post("/create-course", AdminAuth, async (req, res) => {
     });
   }
 });
+
+// Admin Update Course
 AdminRouter.put("/update-course", AdminAuth, async (req, res) => {
   const adminId = req.adminId;
   const { title, description, price, imageUrl, courseId } = req.body;
@@ -134,6 +148,8 @@ AdminRouter.put("/update-course", AdminAuth, async (req, res) => {
     });
   }
 });
+
+// Admin Delete Course
 AdminRouter.delete("/delete-course", AdminAuth, async (req, res) => {
   const adminId = req.adminId;
   const { courseId } = req.body;
@@ -155,7 +171,6 @@ AdminRouter.delete("/delete-course", AdminAuth, async (req, res) => {
     });
   }
 });
-AdminRouter.get("/", AdminAuth, (req, res) => {});
 
 module.exports = {
   AdminRouter,
